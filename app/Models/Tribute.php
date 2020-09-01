@@ -5,6 +5,10 @@ namespace App\Models;
 use App\Game;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Tribute
+ * @package App\Models
+ */
 class Tribute extends Model
 {
     public function games()

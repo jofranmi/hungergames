@@ -17,8 +17,8 @@ class CreateEventsTable extends Migration
             $table->id();
             $table->string('description');
             $table->integer('type');
-            $table->integer('tributes');
-            $table->integer('kills');
+            $table->integer('participants');
+            $table->integer('deaths');
             $table->integer('weight');
             $table->boolean('day');
             $table->string('items');

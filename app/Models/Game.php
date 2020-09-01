@@ -1,10 +1,13 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Models\Tribute;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Game
+ * @package App\Models
+ */
 class Game extends Model
 {
     public function tributes()
