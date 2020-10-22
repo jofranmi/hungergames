@@ -5,10 +5,10 @@ namespace App\Traits\Tribute;
 use App\Models\Tribute;
 
 /**
- * Trait TributeKillTrait
+ * Trait TributeActionsTrait
  * @package App\Traits\Tribute
  */
-trait TributeKillTrait
+trait TributeActionsTrait
 {
 	/**
 	 * @param Tribute $tribute
@@ -26,6 +26,15 @@ trait TributeKillTrait
 	private function addKillCount(Tribute $tribute, int $killCount)
 	{
 		$tribute->kills += $killCount;
+		$tribute->save();
+	}
+
+	/**
+	 * @param Tribute $tribute
+	 */
+	private function updatePowerRoll(Tribute $tribute)
+	{
+		$tribute->power_roll = rand(0, $tribute->power);
 		$tribute->save();
 	}
 }

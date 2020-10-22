@@ -3,32 +3,47 @@
 namespace App\Services\Event;
 
 use App\Models\Event;
-use App\Traits\Tribute\TributeKillTrait;
+use App\Traits\Tribute\TributeActionsTrait;
 use Illuminate\Support\Collection;
 
 /**
- * Class EventExecutionHandler
+ * Class EventExecutionService
  * @package App\Services\Event
  */
-class EventExecutionHandler
+class EventExecutionService
 {
-	use TributeKillTrait;
+	use TributeActionsTrait;
 
 	public function __construct()
 	{
 
 	}
 
+	/**
+	 * @param Event $event
+	 * @param Collection $participants
+	 * @return string
+	 */
 	public function executeEvent(Event $event, Collection $participants)
 	{
 		$eventString = $event->description;
-		$reverseParticipants = $participants->reverse();
+		$orderArray = $participants;
 		$toDie = $event->deaths;
 		$killCount = $toDie;
 		$deaths = $toDie != 0;
 
+		/**
+		 * POWER LOGIC
+		 */
+		$orderArray->transform(function ($tribute) {
+			$this->updatePowerRoll($tribute);
+			return $tribute;
+		});
+
+		$orderArray = $orderArray->sortBy('power_roll');
+
 		// Participants are killed in reverse order
-		foreach ($reverseParticipants as $index => $tribute) {
+		foreach ($orderArray->reverse() as $index => $tribute) {
 			// Array starts at 0 :^)
 			$index += 1;
 			// {(int)}

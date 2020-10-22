@@ -17,6 +17,8 @@ class EventPickerService
     protected $event;
 
     /**
+	 * TODO make weights dynamic
+	 *
      * @var array $weights
      */
     protected $weights = [

@@ -11,6 +11,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Tribute extends Model
 {
+	/**
+	 * @var string[]
+	 */
+	protected $fillable = [
+		'power_roll',
+	];
+
     public function games()
     {
         return $this->belongsToMany(Game::class);

@@ -14,9 +14,9 @@ use Illuminate\Support\Collection;
 class EventHandlerService
 {
 	/**
-	 * @var EventExecutionHandler $eventExecutionHandler
+	 * @var EventExecutionService $eventExecutionService
 	 */
-	protected $eventExecutionHandler;
+	protected $eventExecutionService;
 
 	/**
 	 * @var EventPickerService $eventPickerService
@@ -30,13 +30,13 @@ class EventHandlerService
 
 	/**
 	 * EventHandlerService constructor.
-	 * @param EventExecutionHandler $eventExecutionHandler
+	 * @param EventExecutionService $eventExecutionService
 	 * @param EventPickerService $eventPickerService
 	 * @param EventType $eventType
 	 */
-	public function __construct(EventExecutionHandler $eventExecutionHandler, EventPickerService $eventPickerService, EventType $eventType)
+	public function __construct(EventExecutionService $eventExecutionService, EventPickerService $eventPickerService, EventType $eventType)
 	{
-		$this->eventExecutionHandler = $eventExecutionHandler;
+		$this->eventExecutionService = $eventExecutionService;
 		$this->eventPickerService = $eventPickerService;
 		$this->eventType = $eventType;
 	}
@@ -68,7 +68,7 @@ class EventHandlerService
 
 			$event = $this->eventPickerService->pickEvent($tributeCount, $tributesRemaining);
 			$participants = $this->selectEventParticipants($tributes, $event);
-			$result = $this->eventExecutionHandler->executeEvent($event, $participants);
+			$result = $this->eventExecutionService->executeEvent($event, $participants);
 
 			$events->push($result);
 
@@ -86,8 +86,6 @@ class EventHandlerService
 	}
 
 	/**
-	 *
-	 *
 	 * @param Collection $tributes
 	 * @param Event $event
 	 * @return Collection
@@ -100,7 +98,6 @@ class EventHandlerService
 			$key = $tributes->keys()->random();
 
 			// If the event is negative and the participants are from the same district, roll again
-
 			if ($event->type == $this->eventType::NEGATIVE && $tributes[$key]->district == $tributes->last()->district) {
 				$key = $tributes->keys()->random();
 			}

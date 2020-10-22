@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Game;
+use App\Models\Tribute;
 use App\Services\Event\EventHandlerService;
 use Illuminate\Http\Request;
 
