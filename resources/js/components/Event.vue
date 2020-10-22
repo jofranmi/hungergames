@@ -1,16 +1,18 @@
 <template>
-  <div class="card customer-card bg-secondary text-light">
-    <div class="card-body">
-      <p class="card-text text-center"><i class="fas fa-asterisk"></i></p>
+  <div class="card">
+    <div class="card-body mx-auto">
+      <i class="fas fa-user"></i> {{ message }} <i class="fas fa-user"></i>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  data: {
-    message: 'Hello Vue!'
-  }
+  data: function () {
+    return {
+      message: 'killed ->'
+    };
+  },
 }
 </script>
 

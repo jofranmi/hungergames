@@ -47,7 +47,7 @@ class GameController extends Controller
 			return false;
 		}
 
-		return view('advance');
+		//return view('advance');
 
 		$this->eventHandlerService->advanceTurn($game);
 	}

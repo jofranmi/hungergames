@@ -67,8 +67,11 @@ class EventHandlerService
 			]);
 
 			$event = $this->eventPickerService->pickEvent($tributeCount, $tributesRemaining);
+			// After going through this event, participants are removed from the tribute list
 			$participants = $this->selectEventParticipants($tributes, $event);
 			$result = $this->eventExecutionService->executeEvent($event, $participants);
+
+            dd($participants, $result);
 
 			$events->push($result);
 
@@ -97,12 +100,8 @@ class EventHandlerService
 		for ($i = 1; $i <= $event->participants; $i++) {
 			$key = $tributes->keys()->random();
 
-			// If the event is negative and the participants are from the same district, roll again
-			if ($event->type == $this->eventType::NEGATIVE && $tributes[$key]->district == $tributes->last()->district) {
-				$key = $tributes->keys()->random();
-			}
-
 			$tribute = $tributes->pull($key);
+
 			$participants->push($tribute);
 		}
 

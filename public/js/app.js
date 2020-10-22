@@ -4468,8 +4468,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log('Component mounted.');
+  data: function data() {
+    return {
+      message: 'killed ->'
+    };
   }
 });
 
@@ -40743,26 +40745,15 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-body mx-auto" }, [
+      _c("i", { staticClass: "fas fa-user" }),
+      _vm._v(" " + _vm._s(_vm.message) + " "),
+      _c("i", { staticClass: "fas fa-user" })
+    ])
+  ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "card customer-card bg-secondary text-light" },
-      [
-        _c("div", { staticClass: "card-body" }, [
-          _c("p", { staticClass: "card-text text-center" }, [
-            _c("i", { staticClass: "fas fa-asterisk" })
-          ])
-        ])
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

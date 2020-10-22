@@ -19,9 +19,10 @@ class CreateTributesTable extends Migration
             $table->string('name');
             $table->integer('district');
             $table->integer('aggressiveness');
-            $table->integer('power_initial');
-            $table->integer('power');
-            $table->integer('kills');
+            $table->integer('power_initial')->default(0);
+            $table->integer('power')->default(0);
+            $table->integer('power_roll')->nullable();
+            $table->integer('kills')->nullable();
             $table->boolean('dead');
             $table->timestamps();
         });
