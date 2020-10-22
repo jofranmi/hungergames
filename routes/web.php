@@ -13,3 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', 'GameController@advance');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
