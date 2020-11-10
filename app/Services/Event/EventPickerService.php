@@ -29,7 +29,8 @@ class EventPickerService
      */
     protected $weights = [
         1,
-        2
+        2,
+        3
         /*1,
         1,
         1,

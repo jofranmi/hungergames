@@ -44,9 +44,10 @@ class EventHandlerService
 
     /**
      * @param Game $game
+     * @return Collection
      * @throws Exception
      */
-	public function advanceTurn(Game $game)
+	public function advanceTurn(Game $game): Collection
 	{
 		// Get the alive tributes for the game
 		$tributes = $game->tributes->filter(function ($tribute) {
@@ -57,9 +58,9 @@ class EventHandlerService
 		$tributeCount = $tributes->count();
 		$tributesRemaining = $tributeCount;
 
-		$r = collect([]);
+		$r = collect();
 
-		$events = collect();
+		$results = collect();
 
 		// Roll events until there are no more participants left
 		while ($tributeCount != 0) {
@@ -75,7 +76,7 @@ class EventHandlerService
 
             //dd($participants, $result);
 
-			$events->push($result);
+			$results->push($result);
 
 			$tributeCount -= $event->participants;
 			$tributesRemaining -= $event->deaths;
@@ -87,7 +88,8 @@ class EventHandlerService
 			]));
 		}
 
-		dd($r, $events);
+		return $results;
+		//dd($r, $events);
 	}
 
 	/**

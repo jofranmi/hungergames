@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Game;
 use App\Models\Tribute;
 use App\Services\Event\EventHandlerService;
+use Exception;
 use Illuminate\Http\Request;
 
 /**
@@ -34,9 +35,10 @@ class GameController extends Controller
 		$this->game = $game;
 	}
 
-	/**
-	 * @return bool
-	 */
+    /**
+     * @return bool
+     * @throws Exception
+     */
 	public function advance()
 	{
 		// Find the current game
@@ -47,8 +49,8 @@ class GameController extends Controller
 			return false;
 		}
 
-		//return view('advance');
+		$results = $this->eventHandlerService->advanceTurn($game);
 
-		$this->eventHandlerService->advanceTurn($game);
+        return view('advance')->with('results', $results);
 	}
 }

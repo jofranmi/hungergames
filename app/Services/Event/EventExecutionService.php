@@ -33,10 +33,10 @@ class EventExecutionService
     /**
      * @param Event $event
      * @param Collection $participants
-     * @return string
+     * @return Collection
      * @throws Exception
      */
-    public function executeEvent(Event $event, Collection $participants): string
+    public function executeEvent(Event $event, Collection $participants): Collection
     {
         switch ($event->type) {
             case $this->eventType::POSITIVE:
@@ -62,9 +62,9 @@ class EventExecutionService
     /**
      * @param Event $event
      * @param Collection $participants
-     * @return string
+     * @return Collection
      */
-    public function executeNeutralEvent(Event $event, Collection $participants): string
+    public function executeNeutralEvent(Event $event, Collection $participants): Collection
     {
         $eventString = $event->description;
 
@@ -75,21 +75,27 @@ class EventExecutionService
             $eventString = $this->replaceIndexWithTributeName($index , $tribute->name, $eventString);
         }
 
-        return $eventString;
+        $result = collect([
+            'description' => $eventString,
+            'tributes' => collect(['alive' => $participants])
+        ]);
+
+        return $result;
     }
 
     /**
      * @param Event $event
      * @param Collection $participants
-     * @return string
+     * @return Collection
      */
-    public function executeNegativeEvent(Event $event, Collection $participants): string
+    public function executeNegativeEvent(Event $event, Collection $participants): Collection
     {
         $eventString = $event->description;
         $orderArray = $participants;
         $toDie = $event->deaths;
         $killCount = $toDie;
-        $deaths = $toDie != 0;
+        $alive = collect();
+        $dead = collect();
 
         /**
          * POWER LOGIC
@@ -108,21 +114,28 @@ class EventExecutionService
             // {(int)}
             $eventString = $this->replaceIndexWithTributeName($index , $tribute->name, $eventString);
 
-            // If people are due to die
-            if ($deaths) {
-                // Kill them if there are people left to die
-                if ($toDie > 0) {
-                    $this->killTribute($tribute);
-                    $toDie -= 1;
-                }
-                // Otherwise add total kill count to survivors
-                else {
-                    $this->addKillCount($tribute, $killCount);
-                }
+            // Kill the tribute if there are tributes left to die
+            if ($toDie > 0) {
+                $dead->push($tribute);
+                $this->killTribute($tribute);
+                $toDie -= 1;
+            }
+            // Otherwise add total kill count to the survivors
+            else {
+                $alive->push($tribute);
+                $this->addKillCount($tribute, $killCount);
             }
         }
 
-        return $eventString;
+        $result = collect([
+            'description' => $eventString,
+            'tributes' => collect([
+                'alive' => $alive,
+                'dead' => $dead
+            ])
+        ]);
+
+        return $result;
     }
 
     public function executeEndingEvent()
