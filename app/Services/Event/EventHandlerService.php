@@ -5,6 +5,7 @@ namespace App\Services\Event;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Game;
+use Exception;
 use Illuminate\Support\Collection;
 
 /**
@@ -41,9 +42,10 @@ class EventHandlerService
 		$this->eventType = $eventType;
 	}
 
-	/**
-	 * @param Game $game
-	 */
+    /**
+     * @param Game $game
+     * @throws Exception
+     */
 	public function advanceTurn(Game $game)
 	{
 		// Get the alive tributes for the game
@@ -66,12 +68,12 @@ class EventHandlerService
 				'alive' => $tributesRemaining
 			]);
 
-			$event = $this->eventPickerService->pickEvent($tributeCount, $tributesRemaining);
+			$event = $this->eventPickerService->pickEvent($tributeCount, $tributesRemaining, $game->round, $game->day);
 			// After going through this event, participants are removed from the tribute list
 			$participants = $this->selectEventParticipants($tributes, $event);
 			$result = $this->eventExecutionService->executeEvent($event, $participants);
 
-            dd($participants, $result);
+            //dd($participants, $result);
 
 			$events->push($result);
 
