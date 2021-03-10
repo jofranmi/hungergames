@@ -22,3 +22,7 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 .idea
+.idea/*
+.idea/hungergames.iml
+.idea/php.xml
+.idea/workspace.xml

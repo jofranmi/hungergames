@@ -4474,6 +4474,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     result: {
@@ -40758,16 +40761,28 @@ var render = function() {
         _c(
           "div",
           { staticClass: "row" },
-          _vm._l(_vm.result.tributes.alive, function(tribute) {
-            return _c("div", { staticClass: "col-sm" }, [
-              _c("img", {
-                staticClass: "img-thumbnail rounded-circle mx-auto d-block",
-                staticStyle: { "max-width": "100px" },
-                attrs: { src: "/img/icon.jpg", alt: "..." }
-              })
-            ])
-          }),
-          0
+          [
+            _vm._l(_vm.result.tributes.alive, function(tribute) {
+              return _c("div", { staticClass: "col-sm" }, [
+                _c("img", {
+                  staticClass: "img-thumbnail rounded-circle mx-auto d-block",
+                  staticStyle: { "max-width": "100px" },
+                  attrs: { src: "/img/icon.jpg", alt: "..." }
+                })
+              ])
+            }),
+            _vm._v(" "),
+            _vm._l(_vm.result.tributes.dead, function(tribute) {
+              return _c("div", { staticClass: "col-sm" }, [
+                _c("img", {
+                  staticClass: "img-thumbnail rounded-circle mx-auto d-block",
+                  staticStyle: { "max-width": "100px" },
+                  attrs: { src: "/img/icon.jpg", alt: "..." }
+                })
+              ])
+            })
+          ],
+          2
         ),
         _vm._v(" "),
         _c("div", { staticClass: "row" }, [
@@ -53119,15 +53134,14 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*!*******************************************!*\
   !*** ./resources/js/components/Event.vue ***!
   \*******************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Event_vue_vue_type_template_id_5793e382___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Event.vue?vue&type=template&id=5793e382& */ "./resources/js/components/Event.vue?vue&type=template&id=5793e382&");
 /* harmony import */ var _Event_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Event.vue?vue&type=script&lang=js& */ "./resources/js/components/Event.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Event_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Event_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Event_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Event.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/Event.vue?vue&type=style&index=0&lang=css&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Event_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Event.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/Event.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -53159,7 +53173,7 @@ component.options.__file = "resources/js/components/Event.vue"
 /*!********************************************************************!*\
   !*** ./resources/js/components/Event.vue?vue&type=script&lang=js& ***!
   \********************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -53290,8 +53304,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Jofran\Homestead\hungergames\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Jofran\Homestead\hungergames\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/vagrant/hungergames/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/vagrant/hungergames/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -4,6 +4,8 @@ namespace App\Services\Event;
 
 use App\Models\Event;
 use App\Models\EventType;
+use App\Models\Game;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
@@ -23,29 +25,6 @@ class EventPickerService
     protected $eventType;
 
     /**
-	 * TODO make weights dynamic
-	 * Participants weight
-     * @var array $weights
-     */
-    protected $weights = [
-        1,
-        2,
-        3
-        /*1,
-        1,
-        1,
-        1,
-        2,
-        2,
-        2,
-        3,
-        3,
-        4,
-        5,
-        6*/
-    ];
-
-    /**
      * EventPickerService constructor.
      * @param Event $event
      * @param EventType $eventType
@@ -59,84 +38,36 @@ class EventPickerService
     /**
      * @param int $tributeCount
      * @param int $tributesRemaining
-     * @param int $round
-     * @param bool $day
+     * @param int $participants
+     * @param Game $game
      * @return Event
      */
-    public function pickEvent(int $tributeCount, int $tributesRemaining, int $round, bool $day): Event
+    public function pickEvent(int $tributeCount, int $tributesRemaining, int $participants, Game $game): Event
     {
-        // Roll for the amounts of participants
-        $participants = $this->calculateParticipants($tributeCount);
-
         // Get an event where the rolled amount of participants
-        $eventsQuery = $this->event
-            ->where('participants', $participants);
+        $eventsQuery = $this->event->where('participants', '=' , $participants);
 
-        // If it's the first round and daylight, execute a starting event
-        if ($tributesRemaining == 2) {
+        // If only 2 tributes remain, execute an ending event
+        if ($tributeCount == 2 && $tributesRemaining == 2) {
             $eventsQuery->where('type', $this->eventType::ENDING);
         }
         // If it's the first round and daylight, execute a starting event
-        else if ($round == 1 && $day) {
+        else if ($game->round == 1 && $game->day) {
             $eventsQuery->where('type', $this->eventType::STARTING);
         }
         // Get normal events
         else {
-            $eventsQuery->where('type', '!=', [$this->eventType::STARTING, $this->eventType::ENDING]);
+            $eventsQuery->where('type', '!=', [$this->eventType::STARTING, $this->eventType::ENDING])
+                ->where('deaths', '<=', $tributesRemaining - 2);
         }
 
-        $events = $eventsQuery->get();
-
-        // Removes events that will overflow tribute use or leave less than 2 remaining
-        $eventsFiltered = $this->filterEvents($events, $tributeCount, $tributesRemaining);
-
         // Adds all of the events id into an array by weight
-        $eventsWeights = $this->getEventWeights($eventsFiltered);
-
-        // Get the event ID to play
-        $eventIdToPlay = $eventsWeights->random();
+        $eventsWeights = $this->getEventWeights($eventsQuery->get());
 
         // Find said event
-        $event = $this->event->find($eventIdToPlay);
+        $event = $this->event->find($eventsWeights->random());
 
         return $event;
-    }
-
-    /**
-     * @param int $tributeCount
-     * @return int
-     */
-    private function calculateParticipants(int $tributeCount): int
-    {
-        $weights = collect($this->weights);
-
-        // Remove entries that exceed the current tribute count
-        $weightsFiltered = $weights->filter(function ($count) use ($tributeCount) {
-            return $count <= $tributeCount;
-        });
-
-        $tributesToPlay = $weightsFiltered->random();
-
-        return $tributesToPlay;
-    }
-
-    /**
-     * Filter events and removes those that will either
-     * Use more tributes than available
-     * Leave less than 2 tributes alive
-     *
-     * @param Collection $events
-     * @param int $tributeCount
-     * @param int $tributesRemaining
-     * @return Collection
-     */
-    private function filterEvents(Collection $events, int $tributeCount, int $tributesRemaining): Collection
-    {
-        $filteredEvents = $events->filter(function ($event) use ($tributeCount, $tributesRemaining) {
-            return (($tributeCount - $event->participants >= 0) && ($tributesRemaining - $event->deaths >= 2));
-        });
-
-        return $filteredEvents;
     }
 
     /**

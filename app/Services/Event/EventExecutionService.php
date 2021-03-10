@@ -47,11 +47,12 @@ class EventExecutionService
                 $result = $this->executeNeutralEvent($event, $participants);
                 break;
             case $this->eventType::NEGATIVE:
+            case $this->eventType::ENDING:
                 $result = $this->executeNegativeEvent($event, $participants);
                 break;
-            case $this->eventType::ENDING:
+            /*case $this->eventType::ENDING:
                 $result = $this->executeEndingEvent($event, $participants);
-                break;
+                break;*/
             default:
                 throw new Exception('Event has no type.');
         }

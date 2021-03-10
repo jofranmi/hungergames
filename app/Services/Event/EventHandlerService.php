@@ -29,6 +29,12 @@ class EventHandlerService
 	 */
 	protected $eventType;
 
+    /**
+     * Participants weight
+     * @var $weights
+     */
+    protected $weights;
+
 	/**
 	 * EventHandlerService constructor.
 	 * @param EventExecutionService $eventExecutionService
@@ -37,6 +43,25 @@ class EventHandlerService
 	 */
 	public function __construct(EventExecutionService $eventExecutionService, EventPickerService $eventPickerService, EventType $eventType)
 	{
+        //TODO make weights dynamic
+	    $this->weights = collect([
+            1,
+            2,
+            3
+            /*1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            3,
+            3,
+            4,
+            5,
+            6*/
+        ]);
+
 		$this->eventExecutionService = $eventExecutionService;
 		$this->eventPickerService = $eventPickerService;
 		$this->eventType = $eventType;
@@ -58,39 +83,60 @@ class EventHandlerService
 		$tributeCount = $tributes->count();
 		$tributesRemaining = $tributeCount;
 
-		$r = collect();
+		if ($tributeCount == 2) {
+		    return collect([$this->doEventLogic($tributeCount, $tributesRemaining, 2, $game, $tributes)->result]);
+        }
+
+		$eventParticipants = collect();
+
+        //Get a random number of events with a random number of participants
+		for ($i = $tributesRemaining; $i >= 1;) {
+            $participants = $this->weights->filter(function ($weight) use ($i) {
+                return $weight <= $i;
+            })->random();
+
+            $eventParticipants->push($participants);
+            $i -= $participants;
+        }
 
 		$results = collect();
 
-		// Roll events until there are no more participants left
-		while ($tributeCount != 0) {
-			$log = collect([
-				'remaining' => $tributeCount,
-				'alive' => $tributesRemaining
-			]);
+		foreach ($eventParticipants as $participantsPerEvent) {
+		    $result = $this->doEventLogic($tributeCount, $tributesRemaining, $participantsPerEvent, $game, $tributes);
 
-			$event = $this->eventPickerService->pickEvent($tributeCount, $tributesRemaining, $game->round, $game->day);
-			// After going through this event, participants are removed from the tribute list
-			$participants = $this->selectEventParticipants($tributes, $event);
-			$result = $this->eventExecutionService->executeEvent($event, $participants);
+		    $tributesRemaining = $result['tributesRemaining'];
 
-            //dd($participants, $result);
-
-			$results->push($result);
-
-			$tributeCount -= $event->participants;
-			$tributesRemaining -= $event->deaths;
-
-			$r->push($log->merge([
-				'participating' => $log['remaining'] - $tributeCount,
-				'killed' => $log['alive'] - $tributesRemaining,
-				'event' => $event->description,
-			]));
-		}
+            $results->push($result['result']);
+        }
 
 		return $results;
-		//dd($r, $events);
 	}
+
+    /**
+     * @param int $tributeCount
+     * @param int $tributesRemaining
+     * @param int $participantsPerEvent
+     * @param Game $game
+     * @param Collection $tributes
+     * @return Collection
+     * @throws Exception
+     */
+	private function doEventLogic(int $tributeCount, int $tributesRemaining, int $participantsPerEvent, Game $game, Collection $tributes): Collection
+    {
+        $event = $this->eventPickerService->pickEvent($tributeCount, $tributesRemaining, $participantsPerEvent, $game);
+
+        // After going through this event, participants are removed from the tribute list
+        $participants = $this->selectEventParticipants($tributes, $event);
+
+        $result = $this->eventExecutionService->executeEvent($event, $participants);
+
+        $tributesRemaining -= $event->deaths;
+
+        return collect([
+            'result' => $result,
+            'tributesRemaining' => $tributesRemaining
+        ]);
+    }
 
 	/**
 	 * @param Collection $tributes
