@@ -44,10 +44,7 @@ class EventHandlerService
 	public function __construct(EventExecutionService $eventExecutionService, EventPickerService $eventPickerService, EventType $eventType)
 	{
         //TODO make weights dynamic
-	    $this->weights = collect([
-            1,
-            2,
-            3
+	    $this->weights = collect([1, 2, 3
             /*1,
             1,
             1,
@@ -83,25 +80,27 @@ class EventHandlerService
 		$tributeCount = $tributes->count();
 		$tributesRemaining = $tributeCount;
 
+		// Execute ending event
 		if ($tributeCount == 2) {
-		    return collect([$this->doEventLogic($tributeCount, $tributesRemaining, 2, $game, $tributes)->result]);
+		    return collect([$this->doEventLogic(2, 2, 2, $game, $tributes)->result]);
         }
 
-		$eventParticipants = collect();
+		$participantsPerEventTotal = collect();
 
-        //Get a random number of events with a random number of participants
+        // Get a random number of events with a random number of participants
 		for ($i = $tributesRemaining; $i >= 1;) {
             $participants = $this->weights->filter(function ($weight) use ($i) {
                 return $weight <= $i;
             })->random();
 
-            $eventParticipants->push($participants);
+            $participantsPerEventTotal->push($participants);
             $i -= $participants;
         }
 
 		$results = collect();
 
-		foreach ($eventParticipants as $participantsPerEvent) {
+		// Loops through each # of participants and does the logic
+		foreach ($participantsPerEventTotal as $participantsPerEvent) {
 		    $result = $this->doEventLogic($tributeCount, $tributesRemaining, $participantsPerEvent, $game, $tributes);
 
 		    $tributesRemaining = $result['tributesRemaining'];

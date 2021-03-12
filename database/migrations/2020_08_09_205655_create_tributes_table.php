@@ -18,12 +18,12 @@ class CreateTributesTable extends Migration
             $table->string('friendly_name');
             $table->string('name');
             $table->integer('district');
-            $table->integer('aggressiveness');
+            $table->integer('aggressiveness')->default(50);
             $table->integer('power_initial')->default(0);
             $table->integer('power')->default(0);
-            $table->integer('power_roll')->nullable();
-            $table->integer('kills')->nullable();
-            $table->boolean('dead');
+            $table->integer('power_roll')->default(0);
+            $table->integer('kills')->default(0);
+            $table->boolean('dead')->default(0);
             $table->timestamps();
         });
     }

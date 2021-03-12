@@ -16,8 +16,10 @@ class CreateGamesTable extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('round');
-            $table->boolean('day');
+            $table->integer('round')->default(1);
+            $table->boolean('day')->default(1);
+            $table->boolean('arena')->default(0);
+            $table->boolean('feast')->default(0);
             $table->timestamps();
         });
     }

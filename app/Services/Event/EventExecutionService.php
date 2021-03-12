@@ -103,11 +103,12 @@ class EventExecutionService
          */
         $orderArray->transform(function ($tribute) {
             $this->updatePowerRoll($tribute);
+
             return $tribute;
         });
 
         // Participants are killed in reverse order
-        $orderArray = $orderArray->sortBy('power_roll', 0, true);
+        $orderArray = $orderArray->sortBy('power_roll')->reverse();
 
         foreach ($orderArray as $index => $tribute) {
             // Array starts at 0 :^)

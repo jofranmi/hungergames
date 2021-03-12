@@ -5,7 +5,6 @@ namespace App\Services\Event;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Game;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
@@ -64,10 +63,8 @@ class EventPickerService
         // Adds all of the events id into an array by weight
         $eventsWeights = $this->getEventWeights($eventsQuery->get());
 
-        // Find said event
-        $event = $this->event->find($eventsWeights->random());
-
-        return $event;
+        // Find and return said event
+        return $this->event->find($eventsWeights->random());
     }
 
     /**
